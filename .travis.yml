@@ -11,6 +11,8 @@ branches:
 cache:
   directories:
     - $HOME/.m2
+before_install:
+  - chmod +x mvnw
 install:
   - ./mvnw test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
