@@ -3,6 +3,7 @@ dist: trusty
 addons:
   sonarcloud:
     organization: antop-dev-github
+    token: $SONAR_TOKEN
 jdk:
   - openjdk8
 branches:
