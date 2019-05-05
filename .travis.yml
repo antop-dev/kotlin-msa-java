@@ -11,14 +11,12 @@ branches:
 cache:
   directories:
     - $HOME/.m2
-before_install:
-  - chmod +x mvnw
 install:
-  - ./mvnw test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
-  - ./mvnw clean test jacoco:report
+  - mvn clean test jacoco:report
 after_success:
-  - ./mvnw sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.login=$SONAR_TOKEN
-  - ./mvnw coveralls:report -DrepoToken=$COVERALLS_REPO_TOKEN
+  - mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.login=$SONAR_TOKEN
+  - mvn coveralls:report -DrepoToken=$COVERALLS_REPO_TOKEN
 notifications:
   email: false

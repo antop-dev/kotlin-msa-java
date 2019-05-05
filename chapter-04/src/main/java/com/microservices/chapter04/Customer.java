@@ -1,4 +1,4 @@
-package com.microservices;
+package com.microservices.chapter04;
 
 import lombok.Data;
 

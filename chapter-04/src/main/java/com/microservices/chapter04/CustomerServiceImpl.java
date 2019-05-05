@@ -1,4 +1,4 @@
-package com.microservices;
+package com.microservices.chapter04;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -22,9 +22,13 @@ public class CustomerServiceImpl implements CustomerService {
             new Customer(3, "Microservice", new Telephone("+44", "7123456789"))
     );
 
-
-    private final ConcurrentHashMap<Integer, Customer> customers =
+    private ConcurrentHashMap<Integer, Customer> customers =
             new ConcurrentHashMap<>(initialCustomers.stream().collect(toMap(Customer::getId, Function.identity())));
+
+    @Override
+    public void reset() {
+        customers = new ConcurrentHashMap<>(initialCustomers.stream().collect(toMap(Customer::getId, Function.identity())));
+    }
 
     @Override
     public Mono<Customer> getCustomer(int id) {
@@ -41,10 +45,15 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Mono<Customer> createCustomer(Mono<Customer> customerMono) {
-        return customerMono.map(it -> {
-            customers.put(it.getId(), it);
-            return it;
+    public Mono<?> createCustomer(Mono<Customer> customerMono) {
+        return customerMono.flatMap(it -> {
+            if (customers.get(it.getId()) == null) {
+                customers.put(it.getId(), it);
+                return Mono.just(it);
+            } else {
+                String message = String.format("Customer %d already exist", it.getId());
+                return Mono.error(new CustomerExistException(message));
+            }
         });
     }
 

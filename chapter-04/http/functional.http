@@ -34,3 +34,31 @@ Content-Type: application/json
 }
 
 ###
+
+POST http://localhost:7704/functional/customer
+Content-Type: application/json
+
+{
+  "id": 19,
+  "name": "New Customer",
+  "telephone": {
+    "countryCode": "+44",
+    "telephoneNumber": "7123456789"
+  }
+} ''
+
+###
+
+POST http://localhost:7704/functional/customer
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "New Customer",
+  "telephone": {
+    "countryCode": "+44",
+    "telephoneNumber": "7123456789"
+  }
+}
+
+###

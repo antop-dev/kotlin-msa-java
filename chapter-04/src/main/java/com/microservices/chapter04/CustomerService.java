@@ -1,4 +1,4 @@
-package com.microservices;
+package com.microservices.chapter04;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -9,6 +9,7 @@ public interface CustomerService {
 
     Flux<Customer> searchCustomers(String nameFilter);
 
-    Mono<Customer> createCustomer(Mono<Customer> customerMono);
+    Mono<?> createCustomer(Mono<Customer> customerMono);
 
+    void reset();
 }

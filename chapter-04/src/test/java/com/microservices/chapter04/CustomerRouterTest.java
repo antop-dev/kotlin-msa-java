@@ -1,6 +1,7 @@
-package com.microservices;
+package com.microservices.chapter04;
 
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,13 @@ import static org.junit.Assert.assertEquals;
 public class CustomerRouterTest {
     @Autowired
     private WebTestClient webClient;
+    @Autowired
+    private CustomerService customerService;
+
+    @Before
+    public void setUp() {
+        customerService.reset();
+    }
 
     @Test
     public void get() {
@@ -45,5 +53,17 @@ public class CustomerRouterTest {
                 .exchange()
                 .expectStatus().isCreated()
                 .expectHeader().value("Location", Matchers.equalTo("/functional/customer/" + customer.getId()));
+    }
+
+
+    @Test
+    public void createExist() {
+        Customer customer = new Customer(1, "New Customer", new Telephone("+41", "1234567890"));
+        webClient.post()
+                .uri("/functional/customer")
+                .body(Mono.just(customer), Customer.class)
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 }

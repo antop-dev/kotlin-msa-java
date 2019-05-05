@@ -1,4 +1,4 @@
-package com.microservices;
+package com.microservices.chapter04;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -37,9 +37,14 @@ public class CustomerHandler {
         return customerService
                 .createCustomer(serverRequest.bodyToMono(Customer.class))
                 .flatMap(it -> {
-                    URI uri = URI.create("/functional/customer/" + it.getId());
+                    URI uri = URI.create("/functional/customer/" + ((Customer) it).getId());
                     return ServerResponse.created(uri).build();
-                });
+                })
+                .onErrorResume(Exception.class, it -> ServerResponse.badRequest().body(
+                        BodyInserters.fromObject(
+                                new ErrorResponse("error creating customer", it.getMessage() != null ? it.getMessage() : "error")
+                        )
+                ));
     }
 
 }
