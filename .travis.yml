@@ -1,5 +1,7 @@
 language: java
 dist: trusty
+services:
+  - mongodb
 addons:
   sonarcloud:
     organization: antop-dev-github
@@ -11,9 +13,11 @@ branches:
 cache:
   directories:
     - $HOME/.m2
-install:
-  - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+before_script:
+  - sleep 15 # MongoDB does not immediately accept connections
+  - mongo microservices --eval 'db.createCollection("Customers");'
 script:
+  - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
   - mvn clean test jacoco:report
 after_success:
   - mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.login=$SONAR_TOKEN
