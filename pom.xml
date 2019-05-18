@@ -18,7 +18,12 @@
 
     <modules>
         <module>chapter-04</module>
+        <module>chapter-05</module>
     </modules>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
 
     <dependencies>
         <dependency>
